@@ -394,9 +394,11 @@ main.registerCommand({
     );
   } else {
     require('./server/shell.js').connect(
-      new projectContextModule.ProjectContext({
+      var projectContext = new projectContextModule.ProjectContext({
         projectDir: options.appDir
-      }).getMeteorShellDirectory()
+      });
+
+      files.convertToOSPath(projectContext.getMeteorShellDirectory());
     );
     throw new main.WaitForExit;
   }
