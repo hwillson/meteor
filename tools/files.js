@@ -1174,8 +1174,8 @@ var toPosixPath = function (p, notAbsolute) {
 
 var toDosPath = function (p, notAbsolute) {
   if (p[0] === '/' && ! notAbsolute) {
-    if (! /^\/[A-Za-z]\//.test(p))
-      throw new Error("Surprising path: " + p);
+    if (! /^\/[A-Za-z]\/.*/.test(p))
+      throw new Error("Surprising path: '" + p + "'");
     // transform a previously windows path back
     // "/C/something" to "c:/something"
     p = p[1] + ":" + p.slice(2);
