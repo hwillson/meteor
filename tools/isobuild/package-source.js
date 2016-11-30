@@ -1181,7 +1181,7 @@ _.extend(PackageSource.prototype, {
           } else {
             // This file is an asset.
             assets.push({
-              relPath: item
+              relPath: item.normalize('NFC')
             });
           }
         });
