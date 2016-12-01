@@ -21,9 +21,7 @@ git submodule update --init --recursive
 # tests on one node.
 if [[ $CIRCLE_NODE_TOTAL == 1 ]]; then
   echo "Running self-tests"
-  ./meteor self-test --headless \
-      --exclude "$SELF_TEST_EXCLUDE"
-  ;;
+  ./meteor self-test --headless --exclude "$SELF_TEST_EXCLUDE"
 else
   case $CIRCLE_NODE_INDEX in
   0)
