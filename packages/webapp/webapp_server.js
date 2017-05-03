@@ -246,18 +246,18 @@ var boilerplateByArch = {};
 //
 // If a previous connect middleware has rendered content for the head or body,
 // returns the boilerplate with that content patched in otherwise
-// memoizes on HTML attributes (used by, eg, appcache) and whether inline 
+// memoizes on HTML attributes (used by, eg, appcache) and whether inline
 // scripts are currently allowed.
 // XXX so far this function is always called with arch === 'web.browser'
 var memoizedBoilerplate = {};
 var getBoilerplate = function (request, arch) {
   var useMemoized = ! (request.dynamicHead || request.dynamicBody);
   var htmlAttributes = getHtmlAttributes(request);
-  
+
   if (useMemoized) {
-    // The only thing that changes from request to request (unless extra 
-    // content is added to the head or body) are the HTML attributes 
-    // (used by, eg, appcache) and whether inline scripts are allowed, so we 
+    // The only thing that changes from request to request (unless extra
+    // content is added to the head or body) are the HTML attributes
+    // (used by, eg, appcache) and whether inline scripts are allowed, so we
     // can memoize based on that.
     var memHash = JSON.stringify({
       inlineScriptsAllowed: inlineScriptsAllowed,
@@ -272,11 +272,11 @@ var getBoilerplate = function (request, arch) {
     }
     return memoizedBoilerplate[memHash];
   }
-  
-  var boilerplateOptions = _.extend({ 
-    htmlAttributes: htmlAttributes 
+
+  var boilerplateOptions = _.extend({
+    htmlAttributes: htmlAttributes
   }, _.pick(request, 'dynamicHead', 'dynamicBody'));
-  
+
   return boilerplateByArch[arch].toHTML(boilerplateOptions);
 };
 
@@ -314,7 +314,8 @@ WebAppInternals.generateBoilerplateInstance = function (arch,
         rootUrlPathPrefix: __meteor_runtime_config__.ROOT_URL_PATH_PREFIX || '',
         bundledJsCssUrlRewriteHook: bundledJsCssUrlRewriteHook,
         inlineScriptsAllowed: WebAppInternals.inlineScriptsAllowed(),
-        inline: additionalOptions.inline
+        inline: additionalOptions.inline,
+        linkBundledCssLast: WebAppInternals.linkBundledCssLast
       }
     }, additionalOptions)
   );
@@ -869,6 +870,8 @@ var additionalStaticJs = {};
 WebAppInternals.addStaticJs = function (contents) {
   additionalStaticJs["/" + sha1(contents) + ".js"] = contents;
 };
+
+WebAppInternals.linkBundledCssLast = false;
 
 // Exported for tests
 WebAppInternals.getBoilerplate = getBoilerplate;
