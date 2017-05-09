@@ -1,14 +1,8 @@
 <html {{htmlAttributes}}>
 <head>
-{{#if linkBundledCssLast}}
-{{{head}}}
-{{{dynamicHead}}}
-{{#each css}}  <link rel="stylesheet" type="text/css" class="__meteor-css__" href="{{../bundledJsCssUrlRewriteHook url}}">{{/each}}
-{{else}}
 {{#each css}}  <link rel="stylesheet" type="text/css" class="__meteor-css__" href="{{../bundledJsCssUrlRewriteHook url}}">{{/each}}
 {{{head}}}
 {{{dynamicHead}}}
-{{/if}}
 </head>
 <body>
 {{{body}}}

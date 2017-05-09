@@ -60,6 +60,9 @@ Boilerplate.prototype._generateBoilerplateFromManifestAndSource =
     // allow the caller to extend the default base data
     _.extend(boilerplateBaseData, options.baseDataExtension);
 
+    const boilerplateBaseDataCss = [];
+    var overrideBundledCssLocation = false;
+
     _.each(manifest, function (item) {
       var urlPath = urlMapper(item.url);
       var itemObj = { url: urlPath };
@@ -69,9 +72,8 @@ Boilerplate.prototype._generateBoilerplateFromManifestAndSource =
           pathMapper(item.path));
         itemObj.inline = true;
       }
-
       if (item.type === 'css' && item.where === 'client') {
-        boilerplateBaseData.css.push(itemObj);
+        boilerplateBaseDataCss.push(itemObj);
       }
       if (item.type === 'js' && item.where === 'client') {
         boilerplateBaseData.js.push(itemObj);
@@ -79,12 +81,25 @@ Boilerplate.prototype._generateBoilerplateFromManifestAndSource =
       if (item.type === 'head') {
         boilerplateBaseData.head =
           readUtf8FileSync(pathMapper(item.path));
+        if (boilerplateBaseData.head.indexOf('METEOR_BUNDLED_CSS') > -1) {
+          overrideBundledCssLocation = true;
+        }
       }
       if (item.type === 'body') {
         boilerplateBaseData.body =
           readUtf8FileSync(pathMapper(item.path));
       }
     });
+
+    if (overrideBundledCssLocation) {
+      const cssUrl = boilerplateBaseDataCss[0].url;
+      boilerplateBaseData.head =
+        boilerplateBaseData.head.replace('METEOR_BUNDLED_CSS', cssUrl);
+    } else {
+      boilerplateBaseData.css =
+        boilerplateBaseData.css.concat(boilerplateBaseDataCss);
+    }
+
     var boilerplateRenderCode = SpacebarsCompiler.compile(
       boilerplateSource, { isBody: true });
 
