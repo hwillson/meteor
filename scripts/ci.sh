@@ -62,7 +62,7 @@ set -e
 if should_run_test 0; then
   echo "Running reduced tests ..."
   ./meteor self-test --headless \
-      "add debugOnly and prodOnly packages" \
+        --with-tag "package-tests" \
     || exit_code=$?
 fi
 
