@@ -254,11 +254,11 @@ selftest.define("add packages to app", [], function () {
   run.expectExit(1);
   run.forbidAll("no such version");
 
-  run = s.run("add", "accounts-base");
-
-  run.match("accounts-base: A user account system");
-  run.expectExit(0);
-
+  // run = s.run("add", "accounts-base");
+  //
+  // run.match("accounts-base: A user account system");
+  // run.expectExit(0);
+  //
   // checkPackages(s,
   //               ["meteor-base", "accounts-base"]);
   //
