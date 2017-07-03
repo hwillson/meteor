@@ -62,7 +62,7 @@ set -e
 if should_run_test 0; then
   echo "Running reduced tests ..."
   ./meteor self-test --headless \
-      --file "^p" \
+      "add packages to app" \
     || exit_code=$?
 fi
 
