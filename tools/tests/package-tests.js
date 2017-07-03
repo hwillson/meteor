@@ -231,94 +231,94 @@ selftest.define("add debugOnly and prodOnly packages", [], function () {
 
 // Add packages through the command line. Make sure that the correct set of
 // changes is reflected in .meteor/packages, .meteor/versions and list.
-// selftest.define("add packages to app", [], function () {
-//   var s = new Sandbox();
-//   var run;
-//
-//   // Starting a run
-//   s.createApp("myapp", "package-tests");
-//   s.cd("myapp");
-//   s.set("METEOR_OFFLINE_CATALOG", "t");
-//
-//   // This has legit version syntax, but accounts-base started with 1.0.0 and is
-//   // unlikely to backtrack.
-//   run = s.run("add", "accounts-base@0.123.123");
-//   run.matchErr("no such version");
-//   run.expectExit(1);
-//
-//   // Adding a nonexistent package at a nonexistent version should print
-//   // only one error message, not two. (We used to print "no such
-//   // package" and "no such version".)
-//   run = s.run("add", "not-a-real-package-and-never-will-be@1.0.0");
-//   run.matchErr("no such package");
-//   run.expectExit(1);
-//   run.forbidAll("no such version");
-//
-//   run = s.run("add", "accounts-base");
-//
-//   run.match("accounts-base: A user account system");
-//   run.expectExit(0);
-//
-//   checkPackages(s,
-//                 ["meteor-base", "accounts-base"]);
-//
-//   // Adding the nonexistent version now should still say "no such
-//   // version". Regression test for
-//   // https://github.com/meteor/meteor/issues/2898.
-//   run = s.run("add", "accounts-base@0.123.123");
-//   run.matchErr("no such version");
-//   run.expectExit(1);
-//   run.forbidAll("Currently using accounts-base");
-//   run.forbidAll("will be changed to");
-//
-//   run = s.run("--once");
-//
-//   run = s.run("add", "say-something@1.0.0");
-//   run.match("say-something: print to console");
-//   run.expectExit(0);
-//
-//   checkPackages(s,
-//                 ["meteor-base", "accounts-base",  "say-something@1.0.0"]);
-//
-//   run = s.run("add", "depends-on-plugin");
-//   run.match(/depends-on-plugin.*added,/);
-//   run.expectExit(0);
-//
-//   checkPackages(s,
-//                 ["meteor-base", "accounts-base",
-//                  "say-something@1.0.0", "depends-on-plugin"]);
-//
-//   checkVersions(s,
-//                 ["accounts-base",  "depends-on-plugin",
-//                  "say-something",  "meteor-base",
-//                  "contains-plugin@1.1.0"]);
-//
-//   run = s.run("remove", "say-something");
-//   run.match("say-something: removed dependency");
-//   checkVersions(s,
-//                 ["accounts-base",  "depends-on-plugin",
-//                  "meteor-base",
-//                  "contains-plugin"]);
-//
-//   run = s.run("remove", "depends-on-plugin");
-//   run.match(/contains-plugin.*removed from your project/);
-//   run.match(/depends-on-plugin.*removed from your project/);
-//   run.match("depends-on-plugin: removed dependency");
-//
-//   checkVersions(s,
-//                 ["accounts-base",
-//                  "meteor-base"]);
-//   run = s.run("list");
-//   run.match("accounts-base");
-//   run.match("meteor-base");
-//
-//   // Add a description-less package. Check that no weird things get
-//   // printed (like "added no-description: undefined").
-//   run = s.run("add", "no-description");
-//   run.match("no-description\n");
-//   run.expectEnd();
-//   run.expectExit(0);
-// });
+selftest.define("add packages to app", [], function () {
+  var s = new Sandbox();
+  var run;
+
+  // Starting a run
+  s.createApp("myapp", "package-tests");
+  s.cd("myapp");
+  s.set("METEOR_OFFLINE_CATALOG", "t");
+
+  // This has legit version syntax, but accounts-base started with 1.0.0 and is
+  // unlikely to backtrack.
+  run = s.run("add", "accounts-base@0.123.123");
+  run.matchErr("no such version");
+  run.expectExit(1);
+
+  // Adding a nonexistent package at a nonexistent version should print
+  // only one error message, not two. (We used to print "no such
+  // package" and "no such version".)
+  run = s.run("add", "not-a-real-package-and-never-will-be@1.0.0");
+  run.matchErr("no such package");
+  run.expectExit(1);
+  run.forbidAll("no such version");
+
+  run = s.run("add", "accounts-base");
+
+  run.match("accounts-base: A user account system");
+  run.expectExit(0);
+
+  // checkPackages(s,
+  //               ["meteor-base", "accounts-base"]);
+  //
+  // // Adding the nonexistent version now should still say "no such
+  // // version". Regression test for
+  // // https://github.com/meteor/meteor/issues/2898.
+  // run = s.run("add", "accounts-base@0.123.123");
+  // run.matchErr("no such version");
+  // run.expectExit(1);
+  // run.forbidAll("Currently using accounts-base");
+  // run.forbidAll("will be changed to");
+  //
+  // run = s.run("--once");
+  //
+  // run = s.run("add", "say-something@1.0.0");
+  // run.match("say-something: print to console");
+  // run.expectExit(0);
+  //
+  // checkPackages(s,
+  //               ["meteor-base", "accounts-base",  "say-something@1.0.0"]);
+  //
+  // run = s.run("add", "depends-on-plugin");
+  // run.match(/depends-on-plugin.*added,/);
+  // run.expectExit(0);
+  //
+  // checkPackages(s,
+  //               ["meteor-base", "accounts-base",
+  //                "say-something@1.0.0", "depends-on-plugin"]);
+  //
+  // checkVersions(s,
+  //               ["accounts-base",  "depends-on-plugin",
+  //                "say-something",  "meteor-base",
+  //                "contains-plugin@1.1.0"]);
+  //
+  // run = s.run("remove", "say-something");
+  // run.match("say-something: removed dependency");
+  // checkVersions(s,
+  //               ["accounts-base",  "depends-on-plugin",
+  //                "meteor-base",
+  //                "contains-plugin"]);
+  //
+  // run = s.run("remove", "depends-on-plugin");
+  // run.match(/contains-plugin.*removed from your project/);
+  // run.match(/depends-on-plugin.*removed from your project/);
+  // run.match("depends-on-plugin: removed dependency");
+  //
+  // checkVersions(s,
+  //               ["accounts-base",
+  //                "meteor-base"]);
+  // run = s.run("list");
+  // run.match("accounts-base");
+  // run.match("meteor-base");
+  //
+  // // Add a description-less package. Check that no weird things get
+  // // printed (like "added no-description: undefined").
+  // run = s.run("add", "no-description");
+  // run.match("no-description\n");
+  // run.expectEnd();
+  // run.expectExit(0);
+});
 
 selftest.define("add package with both debugOnly and prodOnly", [], function () {
   var s = new Sandbox();
