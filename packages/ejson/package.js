@@ -4,7 +4,8 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.use(['ecmascript', 'underscore', 'base64']);
+  // api.use(['ecmascript', 'underscore', 'base64']);
+  api.use(['underscore', 'base64']);
   api.mainModule('ejson.js');
   api.export('EJSON');
 });
