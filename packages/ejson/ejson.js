@@ -495,9 +495,12 @@ EJSON.clone = function (v) {
   }
   // handle other objects
   ret = {};
-  Object.keys(v).forEach((key) => {
-    ret[key] = EJSON.clone(v[key]);
+  _.each(v, function (value, key) {
+    ret[key] = EJSON.clone(value);
   });
+  // Object.keys(v).forEach((key) => {
+  //   ret[key] = EJSON.clone(v[key]);
+  // });
   return ret;
 };
 
