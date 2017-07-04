@@ -448,7 +448,7 @@ EJSON.equals = function (a, b, options) {
       i++;
       return true;
     });
-    return ret && Object.keys(b).length === i;
+    return ret && _.size(b) === i;
   }
 };
 
