@@ -9,8 +9,8 @@ Package.onUse(function (api) {
   api.export('EJSON');
 });
 
-Package.onTest(function (api) {
-  api.use('ejson');
-  api.use(['ecmascript', 'tinytest', 'underscore']);
-  api.mainModule('ejson_tests.js');
-});
+// Package.onTest(function (api) {
+//   api.use('ejson');
+//   api.use(['ecmascript', 'tinytest', 'underscore']);
+//   api.mainModule('ejson_tests.js');
+// });
