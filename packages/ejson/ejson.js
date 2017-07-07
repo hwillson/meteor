@@ -448,7 +448,8 @@ EJSON.equals = function (a, b, options) {
       i++;
       return true;
     });
-    return ret && _.size(b) === i;
+    // return ret && _.size(b) === i;
+    return ret && Object.keys(b).length === i;
   }
 };
 
@@ -495,12 +496,12 @@ EJSON.clone = function (v) {
   }
   // handle other objects
   ret = {};
-  _.each(v, function (value, key) {
-    ret[key] = EJSON.clone(value);
-  });
-  // Object.keys(v).forEach((key) => {
-  //   ret[key] = EJSON.clone(v[key]);
+  // _.each(v, function (value, key) {
+  //   ret[key] = EJSON.clone(value);
   // });
+  Object.keys(v).forEach((key) => {
+    ret[key] = EJSON.clone(v[key]);
+  });
   return ret;
 };
 
