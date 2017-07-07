@@ -1,4 +1,5 @@
-import EJSONTest from './custom_models_for_tests';
+// import EJSONTest from './custom_models_for_tests';
+var EJSONTest = require('./custom_models_for_tests').default;
 
 Tinytest.add("ejson - keyOrderSensitive", function (test) {
   test.isTrue(EJSON.equals({

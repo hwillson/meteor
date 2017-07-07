@@ -335,7 +335,8 @@ For EJSON values, the serialization fully represents the value. For non-EJSON va
 EJSON.stringify = function (item, options) {
   var json = EJSON.toJSONValue(item);
   if (options && (options.canonical || options.indent)) {
-    import canonicalStringify from './stringify';
+    // import canonicalStringify from './stringify';
+    var canonicalStringify = require('./stringify').default;
     return canonicalStringify(json, options);
   } else {
     return JSON.stringify(json);
