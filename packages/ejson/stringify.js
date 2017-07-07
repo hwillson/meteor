@@ -96,7 +96,7 @@ var str = function (key, holder, singleIndent, outerIndent, canonical) {
   }
 }
 
-const canonicalStringify = function (value, options) {
+var canonicalStringify = function (value, options) {
   // Make a fake root object containing our value under the key of ''.
   // Return the result of stringifying the value.
   options = _.extend({
@@ -115,4 +115,5 @@ const canonicalStringify = function (value, options) {
   return str('', {'': value}, options.indent, "", options.canonical);
 };
 
-export default canonicalStringify;
+// export default canonicalStringify;
+exports.default = canonicalStringify;
