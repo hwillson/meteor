@@ -12,5 +12,5 @@ Package.onUse(function (api) {
 Package.onTest(function (api) {
   api.use(['ecmascript', 'tinytest', 'underscore']);
   api.use('ejson');
-  api.mainFile('ejson_tests.js');
+  api.mainModule('ejson_tests.js');
 });
