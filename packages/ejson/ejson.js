@@ -3,7 +3,6 @@
  * @summary Namespace for EJSON functions
  */
 EJSON = {};
-EJSONTest = {};
 
 
 
@@ -338,7 +337,8 @@ For EJSON values, the serialization fully represents the value. For non-EJSON va
 EJSON.stringify = function (item, options) {
   var json = EJSON.toJSONValue(item);
   if (options && (options.canonical || options.indent)) {
-    return EJSON._canonicalStringify(json, options);
+    import canonicalStringify from './stringify';
+    return canonicalStringify(json, options);
   } else {
     return JSON.stringify(json);
   }
@@ -514,3 +514,5 @@ EJSON.clone = function (v) {
 // then 'base64' would have to use EJSON.newBinary, and 'ejson' would
 // also have to use 'base64'.)
 EJSON.newBinary = Base64.newBinary;
+
+export { EJSON };
