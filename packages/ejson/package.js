@@ -4,17 +4,16 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.use(['ecmascript', 'underscore', 'base64']);
+  api.use(['underscore', 'base64']);
+  api.mainModule('ejson.js');
+  api.addFiles('stringify.js');
   api.export('EJSON');
-  api.export('EJSONTest', {testOnly: true});
-  api.addFiles('ejson.js', ['client', 'server']);
-  api.addFiles('stringify.js', ['client', 'server']);
+  api.export('EJSONTest', { testOnly: true });
 });
 
 Package.onTest(function (api) {
-  api.use('ejson', ['client', 'server']);
   api.use(['tinytest', 'underscore']);
-
-  api.addFiles('custom_models_for_tests.js', ['client', 'server']);
-  api.addFiles('ejson_test.js', ['client', 'server']);
+  api.use('ejson');
+  api.addFiles('custom_models_for_tests.js');
+  api.mainModule('ejson_tests.js');
 });
