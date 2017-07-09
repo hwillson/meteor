@@ -450,7 +450,8 @@ EJSON.equals = function (a, b, options) {
       i++;
       return true;
     });
-    return ret && Object.keys(b).length === i;
+    // return ret && Object.keys(b).length === i;
+    return ret && _.keys(b).length === i;
   }
 };
 
@@ -497,9 +498,22 @@ EJSON.clone = function (v) {
   }
   // handle other objects
   ret = {};
-  Object.keys(v).forEach((key) => {
+  var keys = _.keys(v);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
     ret[key] = EJSON.clone(v[key]);
-  });
+  }
+  // for (var key in v) {
+  //   if (Object.prototype.hasOwnProperty.call(v, key)) {
+  //     ret[key] = EJSON.clone(v[key]);
+  //   }
+  // }
+  // Object.keys(v).forEach((key) => {
+  //   ret[key] = EJSON.clone(v[key]);
+  // });
+  // _.each(v, function (value, key) {
+  //   ret[key] = EJSON.clone(value);
+  // });
   return ret;
 };
 
