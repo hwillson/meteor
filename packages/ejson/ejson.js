@@ -2,7 +2,7 @@
  * @namespace
  * @summary Namespace for EJSON functions
  */
-EJSON = {};
+const EJSON = {};
 
 
 
