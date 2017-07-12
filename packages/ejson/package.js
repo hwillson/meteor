@@ -1,10 +1,10 @@
 Package.describe({
   summary: "Extended and Extensible JSON library",
-  version: '1.0.13'
+  version: '1.0.14'
 });
 
 Package.onUse(function (api) {
-  api.use(['underscore', 'base64']);
+  api.use(['ecmascript', 'underscore', 'base64']);
   api.mainModule('ejson.js');
   api.addFiles('stringify.js');
   api.export('EJSON');
