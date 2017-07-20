@@ -1373,13 +1373,13 @@ _.extend(Run.prototype, {
 
     self.proc.stdout.setEncoding('utf8');
     self.proc.stdout.on('data', function (data) {
-console.log(data);
       self.outputLog.write('stdout', data);
       self.stdoutMatcher.write(data);
     });
 
     self.proc.stderr.setEncoding('utf8');
     self.proc.stderr.on('data', function (data) {
+console.log(data);
       self.outputLog.write('stderr', data);
       self.stderrMatcher.write(data);
     });
