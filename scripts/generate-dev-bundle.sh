@@ -44,17 +44,19 @@ downloadOfficialNode() {
 # Try each strategy in the following order:
 extractNodeFromTarGz || downloadNodeFromS3 || downloadOfficialNode
 
-if [ $OS = "osx" ]
-then
-    MONGO_ARCHS=( "x86_64" )
-else
-    MONGO_ARCHS=( "i386" "x86_64" )
-fi
-
+MONGO_ARCHS=( "i386" "x86_64" )
 for ARCH in "${MONGO_ARCHS[@]}"
 do
+    ARCH_MONGO_VERSION=$MONGO_VERSION
+    if [ $ARCH = "i386" ]; then
+        if [ $OS = "osx" ]; then
+            continue
+        fi
+        ARCH_MONGO_VERSION=$MONGO_VERSION_I386
+    fi
+
     # Download Mongo from mongodb.com
-    MONGO_NAME="mongodb-${OS}-${ARCH}-${MONGO_VERSION}"
+    MONGO_NAME="mongodb-${OS}-${ARCH}-${ARCH_MONGO_VERSION}"
     MONGO_TGZ="${MONGO_NAME}.tgz"
     MONGO_URL="http://fastdl.mongodb.org/${OS}/${MONGO_TGZ}"
     echo "Downloading Mongo from ${MONGO_URL}"
