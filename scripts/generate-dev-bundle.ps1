@@ -24,6 +24,7 @@ $BUNDLE_VERSION = Get-ShellScriptVariableFromFile -Path "${CHECKOUT_DIR}\meteor"
 
 # extract the major package versions from the build-dev-bundle-common script.
 $MONGO_VERSION = Get-ShellScriptVariableFromFile -Path $common_script -Name 'MONGO_VERSION'
+$MONGO_VERSION_I386 = Get-ShellScriptVariableFromFile -Path $common_script -Name 'MONGO_VERSION_I386'
 $NODE_VERSION = Get-ShellScriptVariableFromFile -Path $common_script -Name 'NODE_VERSION'
 $NPM_VERSION = Get-ShellScriptVariableFromFile -Path $common_script -Name 'NPM_VERSION'
 
@@ -138,31 +139,53 @@ cmd /c robocopy "${DIR}\b\p\node_modules" "${DIR}\lib\node_modules" /e /nfl /ndl
 cd "$DIR"
 cmd /c rmdir "${DIR}\b" /s /q
 
-cd "$DIR"
-mkdir "$DIR\mongodb"
-mkdir "$DIR\mongodb\bin"
+# Download and install 32-bit Mongo (i386)
 
-# download Mongo
-$mongo_name = "mongodb-win32-i386-${MONGO_VERSION}"
-If ($PLATFORM -eq 'windows_x86_64') {
-  # 64-bit would be mongodb-win32-x86_64-2008plus-${MONGO_VERSION}.zip
-  $mongo_name = "mongodb-win32-x86_64-2008plus-${MONGO_VERSION}"
-}
+cd "$DIR"
+mkdir "$DIR\mongodb\i386"
+mkdir "$DIR\mongodb\i386\bin"
+
+$mongo_name = "mongodb-win32-i386-${MONGO_VERSION_I386}"
 $mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
-$mongo_zip = "$DIR\mongodb\mongo.zip"
+$mongo_zip = "$DIR\mongodb\i386\mongo.zip"
 
 $webclient.DownloadFile($mongo_link, $mongo_zip)
 
 $zip = $shell.NameSpace($mongo_zip)
 foreach($item in $zip.items()) {
-  $shell.Namespace("$DIR\mongodb").copyhere($item, 0x14) # 0x10 - overwrite, 0x4 - no dialog
+  $shell.Namespace("$DIR\mongodb\i386").copyhere($item, 0x14) # 0x10 - overwrite, 0x4 - no dialog
 }
 
-cp "$DIR\mongodb\$mongo_name\bin\mongod.exe" $DIR\mongodb\bin
-cp "$DIR\mongodb\$mongo_name\bin\mongo.exe" $DIR\mongodb\bin
+cp "$DIR\mongodb\i386\$mongo_name\bin\mongod.exe" $DIR\mongodb\i386\bin
+cp "$DIR\mongodb\i386\$mongo_name\bin\mongo.exe" $DIR\mongodb\i386\bin
 
 rm -Recurse -Force $mongo_zip
-rm -Recurse -Force "$DIR\mongodb\$mongo_name"
+rm -Recurse -Force "$DIR\mongodb\i386\$mongo_name"
+
+cd $DIR
+
+# Download and install 64-bit Mongo (x86_64)
+
+cd "$DIR"
+mkdir "$DIR\mongodb\x86_64"
+mkdir "$DIR\mongodb\x86_64\bin"
+
+$mongo_name = "mongodb-win32-x86_64-2008plus-${MONGO_VERSION}"
+$mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
+$mongo_zip = "$DIR\mongodb\x86_64\mongo.zip"
+
+$webclient.DownloadFile($mongo_link, $mongo_zip)
+
+$zip = $shell.NameSpace($mongo_zip)
+foreach($item in $zip.items()) {
+  $shell.Namespace("$DIR\mongodb\x86_64").copyhere($item, 0x14) # 0x10 - overwrite, 0x4 - no dialog
+}
+
+cp "$DIR\mongodb\x86_64\$mongo_name\bin\mongod.exe" $DIR\mongodb\x86_64\bin
+cp "$DIR\mongodb\x86_64\$mongo_name\bin\mongo.exe" $DIR\mongodb\x86_64\bin
+
+rm -Recurse -Force $mongo_zip
+rm -Recurse -Force "$DIR\mongodb\x86_64\$mongo_name"
 
 cd $DIR
 

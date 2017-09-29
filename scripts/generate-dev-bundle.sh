@@ -44,18 +44,28 @@ downloadOfficialNode() {
 # Try each strategy in the following order:
 extractNodeFromTarGz || downloadNodeFromS3 || downloadOfficialNode
 
-# Download Mongo from mongodb.com
-MONGO_NAME="mongodb-${OS}-${ARCH}-${MONGO_VERSION}"
-MONGO_TGZ="${MONGO_NAME}.tgz"
-MONGO_URL="http://fastdl.mongodb.org/${OS}/${MONGO_TGZ}"
-echo "Downloading Mongo from ${MONGO_URL}"
-curl "${MONGO_URL}" | tar zx
+if [ $OS = "osx" ]
+then
+    MONGO_ARCHS=( "x86_64" )
+else
+    MONGO_ARCHS=( "i386" "x86_64" )
+fi
 
-# Put Mongo binaries in the right spot (mongodb/bin)
-mkdir -p mongodb/bin
-mv "${MONGO_NAME}/bin/mongod" mongodb/bin
-mv "${MONGO_NAME}/bin/mongo" mongodb/bin
-rm -rf "${MONGO_NAME}"
+for ARCH in "${MONGO_ARCHS[@]}"
+do
+    # Download Mongo from mongodb.com
+    MONGO_NAME="mongodb-${OS}-${ARCH}-${MONGO_VERSION}"
+    MONGO_TGZ="${MONGO_NAME}.tgz"
+    MONGO_URL="http://fastdl.mongodb.org/${OS}/${MONGO_TGZ}"
+    echo "Downloading Mongo from ${MONGO_URL}"
+    curl "${MONGO_URL}" | tar zx
+
+    # Put Mongo binaries in the right spot
+    mkdir -p "mongodb/${ARCH}/bin"
+    mv "${MONGO_NAME}/bin/mongod" "mongodb/${ARCH}/bin"
+    mv "${MONGO_NAME}/bin/mongo" "mongodb/${ARCH}/bin"
+    rm -rf "${MONGO_NAME}"
+done
 
 # export path so we use the downloaded node and npm
 export PATH="$DIR/bin:$PATH"
