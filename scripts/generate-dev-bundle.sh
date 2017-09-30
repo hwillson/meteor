@@ -65,7 +65,7 @@ downloadMongo() {
 }
 
 if [ $OS = "osx" ]; then
-    # Only the 64-bit version of Mongo is supported on OSX/MacOS
+    # Only the 64-bit version of Mongo is supported on macOS.
     downloadMongo "x86_64" $MONGO_VERSION_64BIT
 elif [ $OS = "linux" ]; then
     # 32-bit versions of Linux will use the 32-bit version of Mongo, whereas
