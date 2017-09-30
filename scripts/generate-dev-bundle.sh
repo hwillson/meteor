@@ -44,30 +44,38 @@ downloadOfficialNode() {
 # Try each strategy in the following order:
 extractNodeFromTarGz || downloadNodeFromS3 || downloadOfficialNode
 
-MONGO_ARCHS=( "i386" "x86_64" )
-for ARCH in "${MONGO_ARCHS[@]}"
-do
-    ARCH_MONGO_VERSION=$MONGO_VERSION
-    if [ $ARCH = "i386" ]; then
-        if [ $OS = "osx" ]; then
-            continue
-        fi
-        ARCH_MONGO_VERSION=$MONGO_VERSION_I386
-    fi
+# Download a version of Mongo based on the passed in architecture (i686 or
+# x86_64) and specified version ($MONGO_VERSION_32BIT or $MONGO_VERSION_64BIT).
+downloadMongo() {
+    MONGO_DOWNLOAD_ARCH=$1;
+    MONGO_DOWNLOAD_VERSION=$2;
 
     # Download Mongo from mongodb.com
-    MONGO_NAME="mongodb-${OS}-${ARCH}-${ARCH_MONGO_VERSION}"
+    MONGO_NAME="mongodb-${OS}-${MONGO_DOWNLOAD_ARCH}-${MONGO_DOWNLOAD_VERSION}"
     MONGO_TGZ="${MONGO_NAME}.tgz"
     MONGO_URL="http://fastdl.mongodb.org/${OS}/${MONGO_TGZ}"
     echo "Downloading Mongo from ${MONGO_URL}"
     curl "${MONGO_URL}" | tar zx
 
     # Put Mongo binaries in the right spot
-    mkdir -p "mongodb/${ARCH}/bin"
-    mv "${MONGO_NAME}/bin/mongod" "mongodb/${ARCH}/bin"
-    mv "${MONGO_NAME}/bin/mongo" "mongodb/${ARCH}/bin"
+    mkdir -p "mongodb/${MONGO_DOWNLOAD_ARCH}/bin"
+    mv "${MONGO_NAME}/bin/mongod" "mongodb/${MONGO_DOWNLOAD_ARCH}/bin"
+    mv "${MONGO_NAME}/bin/mongo" "mongodb/${MONGO_DOWNLOAD_ARCH}/bin"
     rm -rf "${MONGO_NAME}"
-done
+}
+
+if [ $OS = "osx" ]; then
+    # Only the 64-bit version of Mongo is supported on OSX/MacOS
+    downloadMongo "x86_64" $MONGO_VERSION_64BIT
+elif [ $OS = "linux" ]; then
+    # 32-bit versions of Linux will use the 32-bit version of Mongo, whereas
+    # 64-bit versions of Linux will use the 64-bit version of Mongo.
+    # We'll download and copy both the 32 and 64 bit versions into the
+    # dev_bundle, then let the Meteor Tool decide which version to use when
+    # running.
+    downloadMongo "i686" $MONGO_VERSION_32BIT
+    downloadMongo "x86_64" $MONGO_VERSION_64BIT
+fi
 
 # export path so we use the downloaded node and npm
 export PATH="$DIR/bin:$PATH"

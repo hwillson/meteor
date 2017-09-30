@@ -23,8 +23,8 @@ function Get-ShellScriptVariableFromFile {
 $BUNDLE_VERSION = Get-ShellScriptVariableFromFile -Path "${CHECKOUT_DIR}\meteor" -Name 'BUNDLE_VERSION'
 
 # extract the major package versions from the build-dev-bundle-common script.
-$MONGO_VERSION = Get-ShellScriptVariableFromFile -Path $common_script -Name 'MONGO_VERSION'
-$MONGO_VERSION_I386 = Get-ShellScriptVariableFromFile -Path $common_script -Name 'MONGO_VERSION_I386'
+$MONGO_VERSION_64BIT = Get-ShellScriptVariableFromFile -Path $common_script -Name 'MONGO_VERSION_64BIT'
+$MONGO_VERSION_32BIT = Get-ShellScriptVariableFromFile -Path $common_script -Name 'MONGO_VERSION_32BIT'
 $NODE_VERSION = Get-ShellScriptVariableFromFile -Path $common_script -Name 'NODE_VERSION'
 $NPM_VERSION = Get-ShellScriptVariableFromFile -Path $common_script -Name 'NPM_VERSION'
 
@@ -145,7 +145,7 @@ cd "$DIR"
 mkdir "$DIR\mongodb\i386"
 mkdir "$DIR\mongodb\i386\bin"
 
-$mongo_name = "mongodb-win32-i386-${MONGO_VERSION_I386}"
+$mongo_name = "mongodb-win32-i386-${MONGO_VERSION_32BIT}"
 $mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
 $mongo_zip = "$DIR\mongodb\i386\mongo.zip"
 
@@ -170,7 +170,7 @@ cd "$DIR"
 mkdir "$DIR\mongodb\x86_64"
 mkdir "$DIR\mongodb\x86_64\bin"
 
-$mongo_name = "mongodb-win32-x86_64-2008plus-${MONGO_VERSION}"
+$mongo_name = "mongodb-win32-x86_64-2008plus-${MONGO_VERSION_64BIT}"
 $mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
 $mongo_zip = "$DIR\mongodb\x86_64\mongo.zip"
 
