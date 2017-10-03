@@ -139,53 +139,37 @@ cmd /c robocopy "${DIR}\b\p\node_modules" "${DIR}\lib\node_modules" /e /nfl /ndl
 cd "$DIR"
 cmd /c rmdir "${DIR}\b" /s /q
 
-# Download and install 32-bit Mongo (i386)
-
-cd "$DIR"
-mkdir "$DIR\mongodb\i386"
-mkdir "$DIR\mongodb\i386\bin"
-
-$mongo_name = "mongodb-win32-i386-${MONGO_VERSION_32BIT}"
-$mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
-$mongo_zip = "$DIR\mongodb\i386\mongo.zip"
-
-$webclient.DownloadFile($mongo_link, $mongo_zip)
-
-$zip = $shell.NameSpace($mongo_zip)
-foreach($item in $zip.items()) {
-  $shell.Namespace("$DIR\mongodb\i386").copyhere($item, 0x14) # 0x10 - overwrite, 0x4 - no dialog
+# Download and install both 32-bit (i386) and 64-bit (x86_64) versions of
+# Mongo. Even though we're currently only building 32-bit Windows Meteor
+# bundles, here we're adding both 32 and 64 bit Mongo versions, to let 64-bit
+# Windows users use the Meteor Tool with >= 3.4.x versions of Mongo (which
+# are 64-bit only).
+$mongo_filenames = @{
+  i386 = "mongodb-win32-i386-${MONGO_VERSION_32BIT}";
+  x86_64 = "mongodb-win32-x86_64-2008plus-${MONGO_VERSION_64BIT}"
 }
+foreach ($arch in $mongo_filenames.Keys) {
+  cd "$DIR"
+  mkdir "$DIR\mongodb\$arch"
+  mkdir "$DIR\mongodb\$arch\bin"
 
-cp "$DIR\mongodb\i386\$mongo_name\bin\mongod.exe" $DIR\mongodb\i386\bin
-cp "$DIR\mongodb\i386\$mongo_name\bin\mongo.exe" $DIR\mongodb\i386\bin
+  $mongo_name = $mongo_filenames.Item($arch);
+  $mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
+  $mongo_zip = "$DIR\mongodb\$arch\mongo.zip"
 
-rm -Recurse -Force $mongo_zip
-rm -Recurse -Force "$DIR\mongodb\i386\$mongo_name"
+  $webclient.DownloadFile($mongo_link, $mongo_zip)
 
-cd $DIR
+  $zip = $shell.NameSpace($mongo_zip)
+  foreach($item in $zip.items()) {
+    $shell.Namespace("$DIR\mongodb\$arch").copyhere($item, 0x14) # 0x10 - overwrite, 0x4 - no dialog
+  }
 
-# Download and install 64-bit Mongo (x86_64)
+  cp "$DIR\mongodb\$arch\$mongo_name\bin\mongod.exe" $DIR\mongodb\$arch\bin
+  cp "$DIR\mongodb\$arch\$mongo_name\bin\mongo.exe" $DIR\mongodb\$arch\bin
 
-cd "$DIR"
-mkdir "$DIR\mongodb\x86_64"
-mkdir "$DIR\mongodb\x86_64\bin"
-
-$mongo_name = "mongodb-win32-x86_64-2008plus-${MONGO_VERSION_64BIT}"
-$mongo_link = "https://fastdl.mongodb.org/win32/${mongo_name}.zip"
-$mongo_zip = "$DIR\mongodb\x86_64\mongo.zip"
-
-$webclient.DownloadFile($mongo_link, $mongo_zip)
-
-$zip = $shell.NameSpace($mongo_zip)
-foreach($item in $zip.items()) {
-  $shell.Namespace("$DIR\mongodb\x86_64").copyhere($item, 0x14) # 0x10 - overwrite, 0x4 - no dialog
+  rm -Recurse -Force $mongo_zip
+  rm -Recurse -Force "$DIR\mongodb\$arch\$mongo_name"
 }
-
-cp "$DIR\mongodb\x86_64\$mongo_name\bin\mongod.exe" $DIR\mongodb\x86_64\bin
-cp "$DIR\mongodb\x86_64\$mongo_name\bin\mongo.exe" $DIR\mongodb\x86_64\bin
-
-rm -Recurse -Force $mongo_zip
-rm -Recurse -Force "$DIR\mongodb\x86_64\$mongo_name"
 
 cd $DIR
 
